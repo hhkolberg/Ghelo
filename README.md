@@ -1,6 +1,6 @@
 # 🏔️ GHELO - Local File Inclusion Fuzzer
 
-**GHELO** is a fast, customizable, and Norse-inspired **Local File Inclusion (LFI) fuzzing tool** written in Python. Designed for penetration testers, CTF enthusiasts, and red teamers, it allows you to quickly identify vulnerable file inclusion points in web applications with flexible filtering and targeting options.
+**GHELO** is a fast, customizable, and IAMStupid-inspired **Local File Inclusion (LFI) fuzzing tool** written in Python. Designed for penetration testers, CTF enthusiasts, and red teamers, it allows you to quickly identify vulnerable file inclusion points in web applications with flexible filtering and targeting options.
 
 ---
 
