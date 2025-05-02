@@ -41,29 +41,45 @@ def main():
 
     print("\n🚀 Starting LFI fuzzing...\n")
 
-    for payload in payloads:
+    baseline_len = None
+    baseline_body = ""
+
+    for i, payload in enumerate(payloads):
         test_url = url.replace("FUZZ", payload)
         try:
             r = requests.get(test_url, timeout=5)
             code = r.status_code
+            content = r.text
+            content_len = len(content)
+
+            # Set the first response as baseline
+            if i == 0:
+                baseline_len = content_len
+                baseline_body = content
+                print(f"[~] Baseline response length: {baseline_len}")
 
             # Skip ignored status codes
             if code in ignores:
                 continue
 
-            hit = False
+            # Check keyword hits
+            keyword_hit = False
+            for keyword in includes:
+                if keyword.lower() in content.lower():
+                    keyword_hit = True
+                    break
 
-            # Check for response keyword matches
-            if includes:
-                for keyword in includes:
-                    if keyword.lower() in r.text.lower():
-                        hit = True
-                        break
-            else:
-                hit = True  # No keyword filter
+            # Compare content length vs baseline
+            length_differs = content_len != baseline_len
 
-            if hit:
-                print(f"[+] HIT [{code}] Payload: {payload}")
+            if keyword_hit or length_differs:
+                reason = []
+                if keyword_hit:
+                    reason.append("Keyword Match")
+                if length_differs:
+                    reason.append(f"Length Diff (Got {content_len}, Baseline {baseline_len})")
+
+                print(f"[+] HIT [{code}] Payload: {payload} => {' | '.join(reason)}")
         except Exception as e:
             print(f"[-] Request failed for {payload}: {e}")
 
